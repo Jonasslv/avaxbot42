@@ -91,6 +91,7 @@ def check_mentions(api, since_id):
             api.update_status(
               status=status,
               in_reply_to_status_id=tweet.id,
+              auto_populate_reply_metadata=True,
               media_ids=[imagemedia.media_id]
             )
             #api.update_with_media(filename, status, in_reply_to_status_id = new_since_id)
