@@ -82,18 +82,26 @@ def check_mentions(api, since_id):
             # Open a local file with wb ( write binary ) permission.
             with open(filename,'wb') as f:
                 shutil.copyfileobj(r.raw, f)
-        
-            logger.info("Image sucessfully Downloaded")
-            transform(filename)
-            status = "Here is your hat."
-            imagemedia = api.media_upload(filename=filename)
+            try:
+                logger.info("Image sucessfully Downloaded")
+                transform(filename)
+                status = "Here is your hat. (only working for humans right now)"
+                imagemedia = api.media_upload(filename=filename)
 
-            api.update_status(
-              status=status,
-              in_reply_to_status_id=tweet.id,
-              auto_populate_reply_metadata=True,
-              media_ids=[imagemedia.media_id]
-            )
+                api.update_status(
+                    status=status,
+                    in_reply_to_status_id=tweet.id,
+                    auto_populate_reply_metadata=True,
+                    media_ids=[imagemedia.media_id]
+                )
+            except:
+                status = "Sorry something went wrong, try again later"
+                api.update_status(
+                    status=status,
+                    in_reply_to_status_id=tweet.id,
+                    auto_populate_reply_metadata=True
+                )
+
             #api.update_with_media(filename, status, in_reply_to_status_id = new_since_id)
         else:
             logger.info("Image Couldn\'t be retrieved")
@@ -108,7 +116,7 @@ def main():
     while True:
         since_id = check_mentions(api, since_id)
         logger.info("Waiting...")
-        time.sleep(15)
+        time.sleep(30)
 
 if __name__ == "__main__":
     main()
