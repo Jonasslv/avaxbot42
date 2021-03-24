@@ -86,7 +86,14 @@ def check_mentions(api, since_id):
             logger.info("Image sucessfully Downloaded")
             transform(filename)
             status = "Here is your hat."
-            api.update_with_media(filename, status, in_reply_to_status_id = new_since_id)
+            imagemedia = api.media_upload(filename=filename)
+
+            api.update_status(
+              status=status,
+              in_reply_to_status_id=tweet.id,
+              media_ids=[imagemedia.media_id]
+            )
+            #api.update_with_media(filename, status, in_reply_to_status_id = new_since_id)
         else:
             logger.info("Image Couldn\'t be retrieved")
         
